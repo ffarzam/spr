@@ -1,30 +1,33 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Post, Category
+from django.http import Http404
 
 
 # Create your views here.
 
 
 def home(request):
-    return render(request, "home.html")
+    return render(request, "BlogApp/home.html")
 
 
 def post_list(request):
     all_posts = Post.objects.all()
-    return render(request, "post_list.html", {"all_posts": all_posts})
+    return render(request, "BlogApp/post_list.html", {"all_posts": all_posts})
 
 
 def post_details(request, pk):
-    post = Post.objects.get(id=pk)
-    return render(request, "post_details.html", {"post": post})
+    try:
+        post = get_object_or_404(Post, id=pk)
+        return render(request, "BlogApp/post_details.html", {"post": post})
+    except:
+        raise Http404("No MyModel matches the given query.")
 
 
 def category_list(request):
     all_category = Category.objects.all()
-    return render(request, "category_list.html", {"all_category": all_category})
+    return render(request, "BlogApp/category_list.html", {"all_category": all_category})
 
 
 def categories_details(request, pk):
     category = Category.objects.get(id=pk)
-    return render(request, "category_details.html", {"category": category})
-
+    return render(request, "BlogApp/category_details.html", {"category": category})
