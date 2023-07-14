@@ -1,18 +1,8 @@
 from django.db import models
+from Authors.models import Author
 
 
 # Create your models here.
-
-
-class Post(models.Model):
-    title = models.CharField(max_length=50)
-    content = models.TextField()
-    author = models.CharField(max_length=50)
-    publication_date = models.DateField()
-
-    def __str__(self) -> str:
-        return f"{self.title}: {self.author}, {self.publication_date}"
-
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -22,9 +12,20 @@ class Category(models.Model):
         return f"{self.name}: {self.description}"
 
 
+class Post(models.Model):
+    title = models.CharField(max_length=50)
+    content = models.TextField()
+    publication_date = models.DateField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"{self.title}: {self.author}, {self.publication_date}"
+
+
 class Comment(models.Model):
-    post = models.TextField()
-    author = models.CharField(max_length=50)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     content = models.TextField()
     comment_date = models.DateField()
 
