@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Post, Category
+from .models import Post, Category, Comment
 from django.http import Http404
 
 
@@ -18,7 +18,15 @@ def post_list(request):
 def post_details(request, pk):
     try:
         post = get_object_or_404(Post, id=pk)
-        return render(request, "BlogApp/post_details.html", {"post": post})
+        print(post.title)
+        comments = list(Comment.objects.all())
+        print(comments)
+        res = []
+        for comment in comments:
+            if comment.post.title == post.title:
+                res.append(comment)
+
+        return render(request, "BlogApp/post_details.html", {"post": post, "comments": res})
     except:
         raise Http404("No MyModel matches the given query.")
 
